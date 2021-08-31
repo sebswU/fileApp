@@ -18,7 +18,7 @@ class MainFrame(tk.Tk):
         self.geometry("800x450")
         self.resizable(True, True)
         ttk.Label(self, text='Enter thing you want to save (Test)').pack()
-        ttk.Entry(self, text='enter something in').pack()
+        ttk.Entry(self, text='Type something in').pack()
         ttk.Button(self, text='Submit').pack()
 
 if __name__ == "__main__":
