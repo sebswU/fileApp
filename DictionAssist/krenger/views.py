@@ -12,6 +12,8 @@ class Form(TemplateView):
             template = 'templates/templates/index.html'
             model = TxtRec
             return render(request,template)
+    def __str__(self):
+        return self.name
 
 class Settings(DetailView):
     def view(request):
@@ -21,6 +23,8 @@ class Settings(DetailView):
             template = 'krenger/templates/user_site.html'
             model = Person
             return render(request, template)
+    def __str__(self):
+        return self.name
     
 class WordArchive(DayArchiveView):
     def view(request):
@@ -30,3 +34,5 @@ class WordArchive(DayArchiveView):
             template = 'krenger/templates/words.html'
             model = WordCard
             return render(request,template)
+    def __str__(self):
+        return self.name
