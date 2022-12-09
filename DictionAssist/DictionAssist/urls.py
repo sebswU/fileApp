@@ -18,5 +18,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("polls/", include('polls.urls')),
+    path("trsc/", include('krenger.urls')),
+    #TODO: accomodate for class-based uris
 ]
