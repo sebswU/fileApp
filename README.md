@@ -3,7 +3,7 @@ App that demonstrates audio speech recognition and gives feedback on developing 
 
 # What Users Do:
 Users input an audio file of an enunciation into the dropbox. Below the dropbox is a text field in which they are to submit the text version of the enunciation.
-Users are responsible for making sure that all words are 
+Users are responsible for making sure that all words are identifiable using a published dictionary (no slang terms or abbreviations).
 If they want to save a group of vocabulary words for further reference, they may sign up for an account.
 
 # What this Web App (Will Be Doing):
