@@ -5,8 +5,9 @@ from krenger.models import Person, TxtRec, WordCard
 
 # Create your views here.
 class Form(TemplateView):
-    def view(request):
-        template_name = 'krenger/templates/index.html'
+    template_name = 'krenger/templates/index.html'
+    def view(request, template_name):
+        
         if HttpResponseNotFound:#TODO: change this to an actual condition abt http errors
             return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
         else:
@@ -17,8 +18,9 @@ class Form(TemplateView):
         return self.name
 
 class Settings(DetailView):
-    def view(request):
-        template_name = 'krenger/template_names/user_site.html'
+    template_name = 'krenger/templates/user_site.html'
+    def view(request, template_name):
+        
         if HttpResponseNotFound:#TODO: change this to an actual condition abt http errors
             return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
         else:
@@ -28,9 +30,10 @@ class Settings(DetailView):
     def __str__(self):
         return self.name
     
-class WordArchive(DayArchiveView):
-    def view(request):
-        template_name = 'krenger/templates/words.html'
+class WordArchive(DetailView):
+    template_name = 'krenger/templates/words.html'
+    def view(request, template_name):
+        
         if HttpResponseNotFound:#TODO: change this to an actual condition abt http errors
             return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
         else:
