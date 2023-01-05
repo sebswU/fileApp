@@ -7,23 +7,18 @@ class TxtRecTests(TestCase):
     def multipleAutoGen():
         counter = 0
         fields = TxtRec._meta.auto_field
-        if len(fields)>1:
-            raise Exception("You made a whoopsie: you cant have more than one auto_field!")
+        assert len(fields) <= 1
 
 class WordCardTests(TestCase):
     def multipleAutoGen():
         counter = 0
         fields = WordCard._meta.auto_field
-        if len(fields)>1:
-            raise Exception("You made a whoopsie: you cant have more than one auto_field!")
-
+        assert len(fields) <= 1
 class PersonTests(TestCase):
     def multipleAutoGen():
         counter = 0
         fields = Person._meta.auto_field
-        if len(fields)>1:
-            raise Exception("You made a whoopsie: you cant have more than one auto_field!")
-    
+        assert len(fields) <= 1
 
 
     #TODO: cannot have more than one autogen field

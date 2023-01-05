@@ -2,7 +2,11 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound
 from django.views.generic import TemplateView, DetailView,DayArchiveView
 from krenger.models import Person, TxtRec, WordCard
-
+import boto3
+import os
+import botoObject
+from dotenv import load_dotenv
+load_dotenv()
 # Create your views here.
 class Form(TemplateView):
     template_name = 'krenger/templates/index.html'
@@ -42,3 +46,9 @@ class WordArchive(DetailView):
             return render(request,template_name)
     def __str__(self):
         return self.name
+
+def words(request, format='wav'):
+    if request == 'POST':
+        boto = botoObject("s3://webapp2012/transcription_results")
+        text = boto.transcribe(format)
+    
