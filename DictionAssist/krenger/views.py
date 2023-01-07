@@ -49,6 +49,5 @@ class WordArchive(DetailView):
 
 def words(request, format='wav'):
     if request == 'POST':
-        boto = botoObject("s3://webapp2012/transcription_results")
-        text = boto.transcribe(format)
+        boto = botoObject.transcribe("s3://webapp2012/audio_files/",format="mp3")
     

@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def transcribe(self, file,s3URI, format, lang='en', location="us-east-1"):
+def transcribe(self, s3URI, format, lang='en', location="us-east-1"):
     s3 = boto3.resource('s3')
     bucket = s3.Bucket('webapp2012')
     Key=f'{datetime.fromtimestamp(time.time())}'
