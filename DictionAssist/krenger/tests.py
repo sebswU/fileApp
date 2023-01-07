@@ -2,6 +2,7 @@ from django.test import TestCase
 import datetime
 from django.utils import timezone
 from .models import TxtRec, WordCard, Person
+
 # Create your tests here.
 class TxtRecTests(TestCase):
     def multipleAutoGen():
