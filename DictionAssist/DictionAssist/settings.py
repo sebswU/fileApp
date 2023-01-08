@@ -23,6 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-)-19o_yemx7ptaba^0&e=+-yrt2$+%s@a+0zslfs3)p$t_-)u="
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#TODO: set debug to false before deploying on website
 DEBUG = True
 
 ALLOWED_HOSTS = []
@@ -52,6 +53,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "DictionAssist.urls"
+MEDIA_ROOT = "s3://webapp2012/audio_files/"
 
 TEMPLATES = [
     {
