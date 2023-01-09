@@ -65,7 +65,6 @@ class Form(TemplateView):
         pass
     def __str__(self):
         return self.name
-    
 
 class Settings(TemplateView):
     template_name = 'krenger/templates/user_site.html'
