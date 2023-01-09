@@ -7,8 +7,6 @@ import boto3
 import datetime
 import time
 import os
-from dotenv import load_dotenv
-load_dotenv()
 # Create your views here.
 class Form(TemplateView):
     template_name = 'krenger/templates/index.html'
