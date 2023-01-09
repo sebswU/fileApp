@@ -1,1 +1,3 @@
 DictionAssist/jstoolchain/node_modules
+DictionAssist/polls/__pycache__
+.env
