@@ -27,14 +27,15 @@
           </nav>
           <div class="card">
             <div class="card-body">
-                <form action = "index.html">
+                <form action = "{%url 'krenger:home'%}" method="post">
+                  {%csrf_token%}
                     <div class="mb-3">
-                        <label for="texts" class="form-label">Input Text</label>
+                        <label for="text" class="form-label">Input Text</label>
                         <input class="form-control" type="text" id="texts">
                     </div>
                     <div class="mb-3">
-                        <label for="audios" class="form-label">Audio File of You Speaking</label>
-                        <input class="form-control" type="file" id="audios" required>
+                        <label for="audio" class="form-label">Audio File of You Speaking</label>
+                        <input class="form-control" type="file" id="audio" required>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn mb-3" required>Enter</button>

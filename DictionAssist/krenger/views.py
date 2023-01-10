@@ -7,10 +7,15 @@ import boto3
 import datetime
 import time
 import os
-# Create your views here.
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
+# Create your views here
+
 class Form(TemplateView):
     template_name = 'krenger/templates/index.html'
+    @method_decorator(csrf_protect)
     def view(request, template_name):
+        c={}
         """POST function: upload file to s3 bucket, start transcription, go to s3 bucket where aws transcribe saved, get file, compare"""
         if HttpResponseNotFound:#TODO: change this to an actual condition abt http errors
             return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
@@ -57,6 +62,9 @@ class Form(TemplateView):
                     #get the content of the file and then return it
                     content = open('../down/transcripts/txt','r').read()
                     print(content)
+
+                else:
+                    return render(inputForm(),'krenger:home',c);
                     
             return render(request,template_name)
     def get_queryset(self, *args, **kwargs):
