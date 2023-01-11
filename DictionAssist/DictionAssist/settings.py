@@ -28,12 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+LOGIN_URL='user:signup'
 # Application definition
 
 INSTALLED_APPS = [
     "polls.apps.PollsConfig",
     "krenger.apps.KrangerConfig",
+    "user",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

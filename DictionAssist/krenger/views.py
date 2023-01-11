@@ -7,7 +7,10 @@ import boto3
 import datetime
 import time
 import os
-# Create your views here.
+from django.views.decorators.csrf import csrf_protect
+from django.utils.decorators import method_decorator
+# Create your views here
+
 class Form(TemplateView):
     template_name = 'krenger/templates/index.html'
     def view(request, template_name):
@@ -16,7 +19,7 @@ class Form(TemplateView):
             return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
         else:
             model = TxtRec
-            if request == "POST":
+            if request.method == "POST":
             #TODO:find a way to check if its an audio file
                 format = "mp3"
                 location = "us-east-1"
@@ -57,6 +60,9 @@ class Form(TemplateView):
                     #get the content of the file and then return it
                     content = open('../down/transcripts/txt','r').read()
                     print(content)
+
+                else:
+                    return render(inputForm(),'/templates/index/');
                     
             return render(request,template_name)
     def get_queryset(self, *args, **kwargs):
