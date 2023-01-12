@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.views.generic import TemplateView, DetailView,DayArchiveView
-from krenger.models import Person,TxtRec, WordCard
-from .forms import inputForm
+from krenger.models import Person,TxtRec, WordCard, inputForm
+from django.urls import reverse
 import boto3
 import datetime
 import time
@@ -11,121 +11,56 @@ from django.views.decorators.csrf import csrf_protect
 from django.utils.decorators import method_decorator
 # Create your views here
 
-<<<<<<< HEAD
-
-def view(request, template_name):
-    template_name="templates/index.html"
-    c={}
+def view(request):
     """POST function: upload file to s3 bucket, start transcription, go to s3 bucket where aws transcribe saved, get file, compare"""
-    if HttpResponseNotFound:#TODO: change this to an actual condition abt http errors
-        return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
-    else:
-        model = TxtRec
-        if request.method != "POST":
-        #TODO:find a way to check if its an audio file
-            form=inputForm()
+    model = TxtRec
+    if request.method == "POST":
+    #TODO:find a way to check if its an audio file
+        fileFormat = "mp3"
+        location = "us-east-1"
+        s3URI = "s3://webapp2012/audio_files/"
+        lang = "en"
+        form = inputForm(request.POST)
+        data = form['audio']
+        if form.is_valid():
+            s3 = boto3.resource('s3')
+            bucket = s3.Bucket('webapp2012')
+            Key=f'{datetime.fromtimestamp(time.time())}'
+            bucket.put_object(Key=Key, Body=data)
+            client = boto3.client('transcribe',region_name=location)
+            jobName = Key
+            #transcribe and save to s3 bucket
+            client.start_transcription_job(
+                region = location,
+                TranscriptionJobName = jobName,
+                Media={
+                    'MediaFileUri': s3URI
+                },
+                mediafileFormat=fileFormat,
+                LanguageCode = lang,
+            )
+            chances = 60
+            #get the location of the saved transcript file
+            while chances > 0:
+                chances -= 1
+                job = client.get_transcription_job(TranscriptionJobName=jobName)
+                jobLoc = job['Transcript']['TranscriptFileUri']
+                print(f"job {jobLoc}")
+                break
+            #download transcript file
+            s3 = boto3.resource('s3')
+            bucket = s3.Bucket('webapp2012')
+            with open('../down/transcripts.txt','wb') as data:
+                bucket.download_file('down', data)
+            #get the content of the file and then return it
+            content = open('../down/transcripts/txt','r').read()
+            print(content)
+            return HttpResponseRedirect(reverse('krenger:home'))
         else:
-            format = "mp3"
-            location = "us-east-1"
-            s3URI = "s3://webapp2012/audio_files/"
-            lang = "en"
-            form = inputForm(request.POST)
-            data = form.audio
-            if form.is_valid():
-                s3 = boto3.resource('s3')
-                bucket = s3.Bucket('webapp2012')
-                Key=f'{datetime.fromtimestamp(time.time())}'
-                bucket.put_object(Key=Key, Body=data)
-                client = boto3.client('transcribe',region_name=location)
-                jobName = Key
-                #transcribe and save to s3 bucket
-                client.start_transcription_job(
-                    region = location,
-                    TranscriptionJobName = jobName,
-                    Media={
-                        'MediaFileUri': s3URI
-                    },
-                    mediaFormat=format,
-                    LanguageCode = lang,
-                )
-                chances = 60
-                #get the location of the saved transcript file
-                while chances > 0:
-                    chances -= 1
-                    job = client.get_transcription_job(TranscriptionJobName=jobName)
-                    jobLoc = job['Transcript']['TranscriptFileUri']
-                    print(f"job {jobLoc}")
-                    break
-                #download transcript file
-                s3 = boto3.resource('s3')
-                bucket = s3.Bucket('webapp2012')
-                with open('../down/transcripts.txt','wb') as data:
-                    bucket.download_file('down', data)
-                #get the content of the file and then return it
-                content = open('../down/transcripts/txt','r').read()
-                print(content)
-                return redirect('krenger:archive')
-    return render(request,'krenger:home', {'form':form})
-=======
-class Form(TemplateView):
-    template_name = 'krenger/templates/index.html'
-    def view(request, template_name):
-        """POST function: upload file to s3 bucket, start transcription, go to s3 bucket where aws transcribe saved, get file, compare"""
-        if HttpResponseNotFound:#TODO: change this to an actual condition abt http errors
-            return HttpResponseNotFound("<h1>Page not found. Try double checking the URL.")
-        else:
-            model = TxtRec
-            if request.method == "POST":
-            #TODO:find a way to check if its an audio file
-                format = "mp3"
-                location = "us-east-1"
-                s3URI = "s3://webapp2012/audio_files/"
-                lang = "en"
-                form = inputForm(request.POST)
-                data = form.audio
-                if form.is_valid():
-                    s3 = boto3.resource('s3')
-                    bucket = s3.Bucket('webapp2012')
-                    Key=f'{datetime.fromtimestamp(time.time())}'
-                    bucket.put_object(Key=Key, Body=data)
-                    client = boto3.client('transcribe',region_name=location)
-                    jobName = Key
-                    #transcribe and save to s3 bucket
-                    client.start_transcription_job(
-                        region = location,
-                        TranscriptionJobName = jobName,
-                        Media={
-                            'MediaFileUri': s3URI
-                        },
-                        mediaFormat=format,
-                        LanguageCode = lang,
-                    )
-                    chances = 60
-                    #get the location of the saved transcript file
-                    while chances > 0:
-                        chances -= 1
-                        job = client.get_transcription_job(TranscriptionJobName=jobName)
-                        jobLoc = job['Transcript']['TranscriptFileUri']
-                        print(f"job {jobLoc}")
-                        break
-                    #download transcript file
-                    s3 = boto3.resource('s3')
-                    bucket = s3.Bucket('webapp2012')
-                    with open('../down/transcripts.txt','wb') as data:
-                        bucket.download_file('down', data)
-                    #get the content of the file and then return it
-                    content = open('../down/transcripts/txt','r').read()
-                    print(content)
+            form=inputForm();
+            
+    return render(request,'krenger/templates/index.html')
 
-                else:
-                    return render(inputForm(),'/templates/index/');
-                    
-            return render(request,template_name)
-    def get_queryset(self, *args, **kwargs):
-        pass
-    def __str__(self):
-        return self.name
->>>>>>> d2c730e375610cbb26386ebe26f13d98630e163b
 
 class Settings(TemplateView):
     template_name = 'krenger/templates/user_site.html'
