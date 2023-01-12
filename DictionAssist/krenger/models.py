@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.forms import ModelForm
 # Create your models here.
 class TxtRec(models.Model):
     text = models.CharField(max_length=5000)
@@ -25,5 +25,9 @@ class Person(models.Model):
     
     def __str__(self):
         return self.name
+class inputForm(ModelForm):
+    class Meta:
+        model=TxtRec
+        fields=['text','audio']
 
 #TODO: test if working with the MW API and AWS 
