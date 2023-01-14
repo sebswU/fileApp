@@ -7,8 +7,6 @@ import boto3
 import datetime
 import time
 import os
-from django.views.decorators.csrf import csrf_protect
-from django.utils.decorators import method_decorator
 # Create your views here
 
 def view(request):
@@ -16,10 +14,11 @@ def view(request):
     model = TxtRec
     if request.method == "POST":
     #TODO:find a way to check if its an audio file
+    #TODO: troubleshoot api for aws
         fileFormat = "mp3"
         location = "us-east-1"
-        s3URI = "s3://webapp2012/audio_files/"
-        lang = "en"
+        s3URI = f"s3://webapp2012/audio_files/"
+        lang = "en-US"
         form = inputForm(request.POST)
         data = form['audio']
         if form.is_valid():
@@ -31,13 +30,14 @@ def view(request):
             jobName = Key
             #transcribe and save to s3 bucket
             client.start_transcription_job(
-                region = location,
                 TranscriptionJobName = jobName,
                 Media={
-                    'MediaFileUri': s3URI
+                    'MediaFileUri': s3URI+Key+'/'
                 },
-                mediafileFormat=fileFormat,
+                MediaFormat=fileFormat,
                 LanguageCode = lang,
+                OutputBucketName = 'webapp2012',
+                OutputKey = 'transcription_results/'
             )
             chances = 60
             #get the location of the saved transcript file
