@@ -1,4 +1,8 @@
 from django.db import models
+<<<<<<< HEAD
+=======
+from django.forms import ModelForm, Form
+>>>>>>> e21d32cb51539a67f4752030f5153e2eb79ec271
 
 # Create your models here.
 class TxtRec(models.Model):
@@ -25,5 +29,9 @@ class Person(models.Model):
     
     def __str__(self):
         return self.name
+<<<<<<< HEAD
+=======
+
+>>>>>>> e21d32cb51539a67f4752030f5153e2eb79ec271
 
 #TODO: test if working with the MW API and AWS 
