@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-)-19o_yemx7ptaba^0&e=+-yrt2$+%s@a+0zslfs3)p$t_-)u=
 #TODO: set debug to false before deploying on website
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 LOGIN_URL='user:signup'
 # Application definition
