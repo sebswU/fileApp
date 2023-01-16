@@ -13,6 +13,7 @@ import os
 def view(request):
     """POST function: upload file to s3 bucket, start transcription, go to s3 bucket where aws transcribe saved, get file, compare"""
     model = TxtRec
+    form = inputForm()
     if request.method == "POST":
     #TODO:find a way to check if its an audio file
     #TODO: troubleshoot api for aws
@@ -67,7 +68,8 @@ def view(request):
             #TODO: register app on Merriam-webster
             #TODO: develop merriam webster api call
             #TODO: word cards in detail view
-    return render(request,'krenger/templates/index.html', {'form':form})
+        return render(request,'krenger/templates/index.html',{'form':form})  
+    return render(request,'krenger/templates/index.html',{'form':form})
 
 
 class Settings(TemplateView):
