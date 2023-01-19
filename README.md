@@ -8,5 +8,12 @@ If they want to save a group of vocabulary words for further reference, they may
 
 # What this Web App (Will Be Doing):
 Takes the audio and text input as a form to be passed to an AWS Transcribe service. Based on the transcribed word identity and the confidence score given by the service, 
-the app will return cards of all the words that have not been transcribed confidently or accurately, using the Merriam-Webster Dictionary API for audio pronounciations 
+the app will return cards of all the words that have not been transcribed confidently or accurately, using the Free Dictionary API for audio pronounciations 
 and definitions.
+# Tech Used:
+- Django
+- Bootstrap
+- AWS (S3 and Transcribe)
+- Free Dictionary API
+- requests
+
