@@ -3,9 +3,9 @@
 <ol class="list-group">
     {% for wordCard in db %}
         <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div class="ms-2 me-auto"style="background-color: #">
-                <div class="fw-bold">{{wordCard.word}}</div>
-                <p>{{wordCard.define}}</p>
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{wordCard.name}}</div>
+                <p>>{{wordCard.define}}</p>
             </div>   
             <div class="ms-2 me-auto">
                 <div class="fw-bold">{{wordCard.pronunc}}</div>
@@ -15,6 +15,8 @@
 
             </div>                    
         </li>
+    {%empty%}
+        <li>none</li>
     {%endfor%}
 </ol>
 {% endblock content%}

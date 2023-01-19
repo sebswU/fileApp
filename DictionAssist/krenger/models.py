@@ -10,7 +10,7 @@ class TxtRec(models.Model):
         return self.name
 
 class WordCard(models.Model):
-    word = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     pronunc = models.FileField()
     textPr = models.CharField(max_length=5120)
     define = models.CharField(max_length = 1000)
@@ -27,5 +27,3 @@ class Person(models.Model):
     def __str__(self):
         return self.name
 
-
-#TODO: test if working with the MW API and AWS 
