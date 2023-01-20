@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-from django.views.generic import TemplateView
-from django.views.generic.list import ListView
+from django.views.generic import TemplateView, ListView
 from krenger.models import Person,TxtRec, WordCard
 from krenger.forms import inputForm
 from django.urls import reverse
@@ -138,9 +137,10 @@ class Settings(TemplateView):
         return self.name
     
 class WordCardView(ListView):
-    template_name="user_site.html"
     model = WordCard
-    context_object_name="db"
+    template_name="krenger/templates/wordcard_list.html"
+    #debugging method: rewrite the view again and pay attention to 
+    #documentation
 
     def __str__(self):
         return self.name
