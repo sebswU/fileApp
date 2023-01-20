@@ -67,7 +67,7 @@ def view(request):
                 except:
                     #if the same form is submitted twice, the same file 
                     #will be uploaded to AWS twice
-                    #there will be a HeadObject error returned
+                    #there will be a HeadObject client error returned
                     return HttpResponseNotFound("<h1>Try reloading the previous page and reentering form</h1>")
 
             #get the content of the file and then return it
@@ -111,7 +111,7 @@ def view(request):
                             print(f"you did not pronounce {text2[i]} correctly")
                             i-=len(text1)-len(text2)
                         except:
-                            raise ValueError
+                            return HttpResponseRedirect()
             #take user to the page with the missed words
             return HttpResponseRedirect(reverse('krenger:archive'))           
             
