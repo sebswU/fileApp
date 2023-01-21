@@ -11,9 +11,9 @@ Takes the audio and text input as a form to be passed to an AWS Transcribe servi
 the app will return cards of all the words that have not been transcribed confidently or accurately, using the Free Dictionary API for audio pronounciations 
 and definitions.
 # Tech Used:
-- Django
-- Bootstrap
-- AWS (S3 and Transcribe)
-- Free Dictionary API
-- requests
+- Django (Backend processes, routing, views, authentication)
+- Bootstrap (Styling the UI)
+- AWS boto3 module (S3 and Transcribe services)
+- Free Dictionary API (Get info and audio pronunciation of mispronounced word)
+- requests module (Used to make REST calls)
 
