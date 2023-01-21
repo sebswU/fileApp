@@ -33,6 +33,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('user:signup')
-def profile(request):
+def profile_view(request):
     template_name="profile.html"
-    return(request, template_name)
+    return redirect('krenger:home')

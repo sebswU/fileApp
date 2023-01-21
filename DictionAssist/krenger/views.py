@@ -78,25 +78,35 @@ def view(request):
             content=content['results']['transcripts'][0]['transcript']
             diff = 0
             #diff measures the difference in len() of two strings
-            text1 = content
-            text2 = text
+
             #algorithm purpose: detect all of the mispronounced words via iter
             #set all as iterable list
-            text1 = text1.split()
-            text2 = text2.split()
-            #checks if transcript is longer than reference inputted text 
-            if len(text1)>len(text2):
-                diff = len(text1)-len(text2)
-            for i in range(len(text2)):
+            content = content.split()#
+            text = text.split()
+            #checks if transcript is longer than reference inputted text
+            # or vv; longer one set to one, shorter set to short
+            # if not then just set variables to whatever 
+            if len(content)>len(text):
+                diff = len(content)-len(text)
+                longStr = content
+                shortStr = text
+            elif len(content)<len(text):
+                diff = len(text)-len(content)
+                longStr = text
+                shortStr = content
+            else:
+                longStr = text
+                shortStr = content
+            for i in range(len(shortStr)):
                 #differences in the length of text/transcript is diff variable
                 #there could either be stuttering by the user or faulty transcription
                 #if the word is not the same, program will rely off of diff variable
                 #if diff is 0 and the word is still wrong that means
                 #the word is actually mispronounced; i returns to original pos
                 #and a word card will be saved in the database
-                if text1[i]!=text2[i]: 
+                if longStr[i]!=shortStr[i]: 
                     while diff!=0:
-                        if text1[i] == text2[i+1]:
+                        if longStr[i] == shortStr[i+1]:
                             i+=1
                             break
                         else:
@@ -104,12 +114,12 @@ def view(request):
                             i+=1
                     if diff==0:
                         try:
-                            content = json.loads(requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{text2[i]}").content)
-                            w = WordCard.objects.create(name=text2[i],pronunc=content[0]['phonetics'][0]['audio'],textPr=content[0]['phonetic'],define=content[0]['meanings'][0]['definitions'][0]['definition'],user=request.user)
+                            content = json.loads(requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{shortStr[i]}").content)
+                            w = WordCard.objects.create(name=shortStr[i],pronunc=content[0]['phonetics'][0]['audio'],textPr=content[0]['phonetic'],define=content[0]['meanings'][0]['definitions'][0]['definition'],user=request.user)
                             w.save()
                             
-                            print(f"you did not pronounce {text2[i]} correctly")
-                            i-=len(text1)-len(text2)
+                            print(f"you did not pronounce {shortStr[i]} correctly")
+                            i-=len(longStr)-len(shortStr)
                         except:
                             return HttpResponseRedirect()
             #take user to the page with the missed words
@@ -119,7 +129,7 @@ def view(request):
             form=inputForm();
 
             #TODO: word cards in detail view
-        return render(request,'krenger/templates/index.html',{'form':form})  
+        return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})  
     return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})
 
 #TODO:decide whether to remove or keep and develop configurations
