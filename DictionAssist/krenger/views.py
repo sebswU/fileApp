@@ -105,7 +105,7 @@ def view(request):
                     if diff==0:
                         try:
                             content = json.loads(requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{text2[i]}").content)
-                            w = WordCard.objects.create(name=text2[i],pronunc=content[0]['phonetics'][0]['audio'],textPr=content[0]['phonetic'],define=content[0]['meanings'][0]['definitions'][0]['definition'])
+                            w = WordCard.objects.create(name=text2[i],pronunc=content[0]['phonetics'][0]['audio'],textPr=content[0]['phonetic'],define=content[0]['meanings'][0]['definitions'][0]['definition'],user=request.user)
                             w.save()
                             
                             print(f"you did not pronounce {text2[i]} correctly")
@@ -120,7 +120,7 @@ def view(request):
 
             #TODO: word cards in detail view
         return render(request,'krenger/templates/index.html',{'form':form})  
-    return render(request,'krenger/templates/index.html',{'form':form})
+    return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})
 
 #TODO:decide whether to remove or keep and develop configurations
 class Settings(TemplateView):

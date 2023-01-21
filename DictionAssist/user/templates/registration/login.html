@@ -1,8 +1,8 @@
-{%extends "base.html"%}
-{%block title%}Signup{%endblock%}
+{%extends 'base.html'%}
+{%block title%}Login{%endblock%}
 
 {%block content%}
-<h1 class="text-center m-3 p-4">Sign Up</h1>
+<h1 class="text-center m-3 p-4">Log In</h1>
 <div class="card m-2 p-3 position-absolute top-50 start-50 translate-middle bg-light">
     <form method="post" action="">
         {%csrf_token%}
@@ -10,5 +10,4 @@
         <button type="submit" value="OK" name="save">Go</button>
     </form>
 </div>
-    
 {%endblock content%}
