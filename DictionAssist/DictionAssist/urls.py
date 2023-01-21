@@ -18,6 +18,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include('krenger.urls')),
-    path("accounts/",include('user.urls')),
+    path("trsc/", include('krenger.urls')),
+    path("user/",include('user.urls')),
+    #TODO: accomodate for class-based uris
 ]
