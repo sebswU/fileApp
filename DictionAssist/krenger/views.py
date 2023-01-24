@@ -149,6 +149,12 @@ class Settings(TemplateView):
 class WordCardView(ListView):
     model = WordCard
     template_name="krenger/templates/wordcard_list.html"
+    def get_queryset(self):
+        try:
+            #search for words for the specific user
+            return WordCard.objects.filter(user=self.request.user)
+        except:
+            return HttpResponseRedirect(reverse('user:signup'))
     #debugging method: rewrite the view again and pay attention to 
     #documentation
 
