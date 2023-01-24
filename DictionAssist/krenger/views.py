@@ -10,8 +10,9 @@ import time
 import os
 import json
 import io
+from django.contrib.auth.decorators import login_required
 # Create your views here
-
+@login_required
 def view(request):
     """POST function: upload file to s3 bucket, start transcription, go to s3 bucket where aws transcribe saved, get file, compare"""
     model = TxtRec
@@ -95,8 +96,8 @@ def view(request):
                 longStr = text
                 shortStr = content
             else:
-                longStr = text
-                shortStr = content
+                longStr = content
+                shortStr = text
             for i in range(len(shortStr)):
                 #differences in the length of text/transcript is diff variable
                 #there could either be stuttering by the user or faulty transcription
@@ -121,7 +122,7 @@ def view(request):
                             print(f"you did not pronounce {shortStr[i]} correctly")
                             i-=len(longStr)-len(shortStr)
                         except:
-                            return HttpResponseRedirect()
+                            return HttpResponseRedirect(reverse("user:signup"))
             #take user to the page with the missed words
             return HttpResponseRedirect(reverse('krenger:archive'))           
             
@@ -145,7 +146,7 @@ class Settings(TemplateView):
             return render(request, template_name)
     def __str__(self):
         return self.name
-    
+  
 class WordCardView(ListView):
     model = WordCard
     template_name="krenger/templates/wordcard_list.html"
