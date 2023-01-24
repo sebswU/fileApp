@@ -1,7 +1,8 @@
 {%extends "base.html"%}
 {%block content%}
-<div class="card">
-<div class="card-body">
+<h1 class="text-center m-2 p-3">Welcome, {{user}}</h1>
+<div class="card position-absolute top-50 start-50 translate-middle bg-light">
+<div class="card-body text-center align-items-start">
     <form enctype="multipart/form-data" action = "{%url 'krenger:home'%}" method="post">
         {%csrf_token%}
         <div class="mb-3">

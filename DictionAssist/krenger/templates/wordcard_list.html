@@ -1,0 +1,25 @@
+{%extends "base.html"%}
+{%block content%}
+<h1 class="m-3 p-4 text-center">Mispronounced Words</h1>
+<ol class="list-group mb-3">
+    {% for wordCard in object_list %}
+        <li class="list-group-item d-flex justify-content-between align-items-start mb-3 mx-2">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{wordCard.name}}</div>
+                <p>>{{wordCard.define}}</p>
+            </div>   
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">{{wordCard.textPr}}</div>
+            </div>     
+            <div class="ms-2 me-auto">
+                <audio controls name="media"> 
+                    <source src="{{wordCard.pronunc}}" type="audio/mpeg">
+                </audio>
+
+            </div>                    
+        </li>
+    {%empty%}
+        <li>none</li>
+    {%endfor%}
+</ol>
+{% endblock content%}

@@ -1,3 +1,5 @@
 DictionAssist/jstoolchain/node_modules
 DictionAssist/polls/__pycache__
 .env
+DictionAssist/krenger/down/transcript.json
+DictionAssist/krenger/down/textRef.txt
