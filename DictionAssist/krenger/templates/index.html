@@ -7,14 +7,67 @@
         {%csrf_token%}
         <div class="mb-3">
             {{form.as_p}}
+            <button type="button" id="record"class="btn mb-3">Record</button>
             <button type="submit" class="btn mb-3" required>Enter</button>
         </div>
         
     </form>
 </div>
+<div class="card-body text-center align-items-start b-2">
+    <h4 class="text-center m2 p-3">Your Recording:</h4>
+    <audio id="download"></audio>
 </div>
-
+</div>
 <script>
+    const recordButton = document.getElementById("record");
+    const audInp = document.getElementById("id_audio");
+    const down = document.getElementById("download");
+    navigator.mediaDevices
+        .getUserMedia({audio:true})
+        .then(stream => {
+            const mediaRecorder = new MediaRecorder(stream,{type:'audio/webm'});
+            let audioChunks = [];
+
+            //button label used as whether recording or not
+            recordButton.onclick = () => {
+                if (recordButton.innerText === "Stop") {
+                    mediaRecorder.stop();
+                    console.log("recording stopped");
+                    recordButton.innerText = "Record";
+                } else {
+                    mediaRecorder.start();
+                    console.log("recording started");
+                    recordButton.innerText = "Stop";
+                }
+            };
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+                
+                console.log("a");
+
+            };
+
+            mediaRecorder.onstop = () => {
+                const audBlob = new Blob([audioChunks],{type:'audio/webm'});
+                const link = URL.createObjectURL(audBlob);
+                const go = document.createElement('a');
+                go.setAttribute('download','recording.webm');
+                go.href=link;
+                document.body.appendChild(go);
+                go.click();
+                go.remove();
+                down.setAttribute('src',link);
+                down.setAttribute('controls',"true");
+                down.setAttribute('autoplay',true);
+                console.log("recorder stop");
+            };
+
+        })
+        .catch((err) => {
+                console.err(`audio error: ${err}`);
+        });
+
+
     //TODO: add mic function that records and saves as file
     //TODO: add button to form that calls mic function
 </script>

@@ -14,6 +14,7 @@ class WordCard(models.Model):
     pronunc = models.FileField()
     textPr = models.CharField(max_length=5120)
     define = models.CharField(max_length = 1000)
+    #foreign key is to user profile as char is to string/char
     user = models.ForeignKey(User,on_delete=models.CASCADE,default=False)
 
     def __str__(self):
