@@ -69,7 +69,7 @@ def view(request):
                     #if the same form is submitted twice, the same file 
                     #will be uploaded to AWS twice
                     #there will be a HeadObject client error returned
-                    return HttpResponseNotFound("<h1>Try reloading the previous page and reentering form</h1>")
+                    return HttpResponseNotFound("<h1>AWS inconvenience: Narrow down the sentence length</h1>")
 
             #get the content of the file and then return it
             #aws returns binary format, view must put all binary stuffs in 
@@ -82,10 +82,16 @@ def view(request):
 
             #algorithm purpose: detect all of the mispronounced words via iter
             #set all as iterable list
-            content = content.split()#
+            for i in ['.',',','!','?']:
+                #take out punctuation that can interfere
+                #with the dictionary API calls
+                content.replace(i,'')
+                text.replace(i,'')
+            #split text into string for iteration
+            content = content.split()
             text = text.split()
             #checks if transcript is longer than reference inputted text
-            # or vv; longer one set to one, shorter set to short
+            # or vv: longer one set to one, shorter set to short
             # if not then just set variables to whatever 
             if len(content)>len(text):
                 diff = len(content)-len(text)
@@ -98,6 +104,7 @@ def view(request):
             else:
                 longStr = content
                 shortStr = text
+
             for i in range(len(shortStr)):
                 #differences in the length of text/transcript is diff variable
                 #there could either be stuttering by the user or faulty transcription
