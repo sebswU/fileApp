@@ -48,11 +48,10 @@
             };
 
             mediaRecorder.onstop = () => {
-                const audBlob = new Blob([audioChunks],{type:'audio/webm'});
-                const link = URL.createObjectURL(audBlob);
+                const link = URL.createObjectURL(audioChunks[0]);
                 const go = document.createElement('a');
                 go.setAttribute('download','recording.webm');
-                go.href=link;
+                go.src=link;
                 document.body.appendChild(go);
                 go.click();
                 go.remove();
@@ -60,6 +59,7 @@
                 down.setAttribute('controls',"true");
                 down.setAttribute('autoplay',true);
                 console.log("recorder stop");
+                audioChunks = [];
             };
 
         })
