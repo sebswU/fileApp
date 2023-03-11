@@ -86,14 +86,23 @@ def view(request):
 
             #algorithm purpose: detect all of the mispronounced words via iter
             #set all as iterable list
-            for i in ['.',',','!','?']:
                 #take out punctuation that can interfere
                 #with the dictionary API calls
-                content.replace(i,'')
-                text.replace(i,'')
-            #split text into string for iteration
             content = content.split()
             text = text.split()
+            for j in content:
+                j.replace('!','')
+                j.replace('?','')
+                j.replace('.','')
+                j.replace(',','')
+            for j in text:
+                j.replace('!','')
+                j.replace('?','')
+                j.replace('.','')
+                j.replace(',','')
+                
+            #split text into string for iteration
+            
             #checks if transcript is longer than reference inputted text
             # or vv: longer one set to one, shorter set to short
             # if not then just set variables to whatever 
@@ -110,12 +119,15 @@ def view(request):
                 shortStr = text
 
             for i in range(len(shortStr)):
+                #first, everything changes to lowercase
                 #differences in the length of text/transcript is diff variable
                 #there could either be stuttering by the user or faulty transcription
                 #if the word is not the same, program will rely off of diff variable
                 #if diff is 0 and the word is still wrong that means
                 #the word is actually mispronounced; i returns to original pos
                 #and a word card will be saved in the database
+                longStr[i] = longStr[i].lower()
+                shortStr[i] = shortStr[i].lower()
                 if longStr[i]!=shortStr[i]: 
                     while diff!=0:
                         if longStr[i] == shortStr[i+1]:
