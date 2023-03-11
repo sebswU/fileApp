@@ -20,13 +20,16 @@ def view(request):
     if request.method == "POST":
     #TODO:find a way to check if its an audio file
     #TODO: if project is up for OS dev, all vars must be configurable
-        fileFormat = "mp3"
+        
         location = "us-east-1"
         s3URI = "s3://webapp2012/"
         lang = "en-US"
         form = inputForm(request.POST, request.FILES)
         data = request.FILES['audio']
         text = request.POST['text']
+        fileFormat = "mp3"
+        if data.content_type == 'video/webm':
+            fileFormat = "webm"
         #will only process if csrf token and session id is valid
         if form.is_valid():
             #open txt file in 'down' folder and put the inputted text inside
@@ -36,17 +39,16 @@ def view(request):
             #get a unique nearest-integer-rounded time in seconds
             Key=f'{int(time.time())}'
             #upload to a hard-coded bucket address for IAM user
-            s3.upload_fileobj(data,'webapp2012',f'{Key}.mp3')
+            s3.upload_fileobj(data,'webapp2012',f'{Key}.{fileFormat}')
             #initiate client connection with AWS Transcribe
             client = boto3.client('transcribe',region_name=location)
             jobName = Key
             #transcribe and save to s3 bucket
-            #TODO: add functionality for .webm
             try:
                 client.start_transcription_job(
                     TranscriptionJobName = jobName,
                     Media={
-                        'MediaFileUri': s3URI+Key+'.mp3'
+                        'MediaFileUri': s3URI+Key+'.'+fileFormat
                     },
                     MediaFormat=fileFormat,
                     LanguageCode = lang,
@@ -56,20 +58,22 @@ def view(request):
             except:
                 return HttpResponseNotFound("<h1>file must be in .mp3 or .webm format</h1>")
             #transcription job will take about 20 seconds
-            #TODO: make website get length of audio file and put in time.sleep()
             time.sleep(20)
             #download transcript file
             s3 = boto3.resource('s3')
             bucket = s3.Bucket('webapp2012')
             with open(os.path.join(os.path.dirname(__file__),"down/transcript.json"),'wb') as dt:
                 try:
-                    #returns in binary format but encoding is json
+                    #returns in binary format but data is encoded in json
                     bucket.download_fileobj(f'transcription_results/{Key}.json', dt)
                 except:
-                    #if the same form is submitted twice, the same file 
-                    #will be uploaded to AWS twice
-                    #there will be a HeadObject client error returned
-                    return HttpResponseNotFound("<h1>AWS inconvenience: Narrow down the sentence length</h1>")
+                    #wait an extra 5 seconds and redo if transcript not present on first try
+                    time.sleep(5)
+                    try:
+                        bucket.download_fileobj(f'transcription_results/{Key}.json', dt)
+                    except:
+                    #if that doesn't work then print out the AWS inconvenience page
+                        return HttpResponseNotFound("<h1>AWS inconvenience: Please submit an audio file at most 5 seconds long</h1>")
 
             #get the content of the file and then return it
             #aws returns binary format, view must put all binary stuffs in 
@@ -136,11 +140,9 @@ def view(request):
         else:
             form=inputForm();
 
-            #TODO: word cards in detail view
         return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})  
     return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})
 
-#TODO:decide whether to remove or keep and develop configurations
 class Settings(TemplateView):
     template_name = 'krenger/templates/user_site.html'
     def view(request, template_name):
