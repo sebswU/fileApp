@@ -5,7 +5,7 @@ from . import views
 
 app_name='krenger'
 urlpatterns=[
-    path('home/',views.view, name='home'),#name={namespace}
+    path('',views.view, name='home'),#name={namespace}
     path('history/',WordCardView.as_view(),name='archive'),
     path('<str:username>/', Settings.as_view(),name='user_settings'),
     

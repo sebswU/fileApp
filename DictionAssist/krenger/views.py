@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, ListView
 from krenger.models import Person,TxtRec, WordCard
 from krenger.forms import inputForm
@@ -10,11 +11,17 @@ import time
 import os
 import json
 import io
-from django.contrib.auth.decorators import login_required
+import wave
+
+
 # Create your views here
 @login_required
 def view(request):
-    """POST function: upload file to s3 bucket, start transcription, go to s3 bucket where aws transcribe saved, get file, compare"""
+    """
+    POST function: upload file to s3 bucket, 
+    start transcription, go to s3 bucket where 
+    aws transcribe saved, get file, compare
+    """
     model = TxtRec
     form = inputForm()
     if request.method == "POST":
@@ -30,6 +37,7 @@ def view(request):
         fileFormat = "mp3"
         if data.content_type == 'video/webm':
             fileFormat = "webm"
+
         #will only process if csrf token and session id is valid
         if form.is_valid():
             #open txt file in 'down' folder and put the inputted text inside
@@ -43,6 +51,7 @@ def view(request):
             #initiate client connection with AWS Transcribe
             client = boto3.client('transcribe',region_name=location)
             jobName = Key
+
             #transcribe and save to s3 bucket
             try:
                 client.start_transcription_job(
@@ -57,7 +66,9 @@ def view(request):
                 )
             except:
                 return HttpResponseNotFound("<h1>file must be in .mp3 or .webm format</h1>")
+            
             #transcription job will take about 20 seconds
+            #TODO: send a signal for React to get the website to wait for the transcription
             time.sleep(20)
             #download transcript file
             s3 = boto3.resource('s3')
@@ -73,7 +84,7 @@ def view(request):
                         bucket.download_fileobj(f'transcription_results/{Key}.json', dt)
                     except:
                     #if that doesn't work then print out the AWS inconvenience page
-                        return HttpResponseNotFound("<h1>AWS inconvenience: Please submit an audio file at most 5 seconds long</h1>")
+                        return HttpResponseNotFound("<h1>Audio should be <= 5 seconds</h1>")
 
             #get the content of the file and then return it
             #aws returns binary format, view must put all binary stuffs in 
@@ -139,7 +150,11 @@ def view(request):
                     if diff==0:
                         try:
                             content = json.loads(requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{shortStr[i]}").content)
-                            w = WordCard.objects.create(name=shortStr[i],pronunc=content[0]['phonetics'][0]['audio'],textPr=content[0]['phonetic'],define=content[0]['meanings'][0]['definitions'][0]['definition'],user=request.user)
+                            w = WordCard.objects.create(name=shortStr[i],
+                                                        pronunc=content[0]['phonetics'][0]['audio'],
+                                                        textPr=content[0]['phonetic'],
+                                                        define=content[0]['meanings'][0]['definitions'][0]['definition'],
+                                                        user=request.user)
                             w.save()
                             
                             print(f"you did not pronounce {shortStr[i]} correctly")
@@ -148,11 +163,7 @@ def view(request):
                             return HttpResponseRedirect(reverse("user:signup"))
             #take user to the page with the missed words
             return HttpResponseRedirect(reverse('krenger:archive'))           
-            
-        else:
-            form=inputForm();
 
-        return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})  
     return render(request,'krenger/templates/index.html',{'form':form, 'user':request.user.username})
 
 class Settings(TemplateView):

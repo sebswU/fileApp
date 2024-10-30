@@ -1,6 +1,11 @@
 # zhEng
 App that demonstrates audio speech recognition and gives feedback on developing language learners' lexical dictionary
 
+# Setup
+- `git clone` the repository
+- navigate to the zheng folder and run `pip install -r requirements.txt`
+- 
+
 # What Users Do:
 Users input an audio file of an enunciation into the dropbox. Below the dropbox is a text field in which they are to submit the text version of the enunciation.
 Users are responsible for making sure that all words are identifiable using a published dictionary (no slang terms or abbreviations).
